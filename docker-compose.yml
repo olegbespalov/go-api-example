@@ -1,0 +1,32 @@
+version: '3'
+
+networks:
+    app-network:
+      driver: bridge
+
+services:
+  api:
+    container_name: api
+    hostname: api
+    working_dir: /var/app
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+      args:
+        APP_NAME: api
+        APP_PORT: 8083
+    ports: 
+      - 8083:8083
+      - 2345:2345
+    tty: true
+    volumes:
+      - .:/var/app:delegated
+    # depends_on:
+        # - mysql
+    security_opt:
+        - seccomp:unconfined
+    cap_add:
+        - SYS_PTRACE
+    networks:
+        - app-network
