@@ -1,6 +1,6 @@
-ARG GO_VERSION=1.15.8
+ARG GO_VERSION=1.17
 
-FROM golang:${GO_VERSION}-alpine as dev
+FROM golang:${GO_VERSION} as base
 
 ARG APP_NAME
 ARG APP_PORT

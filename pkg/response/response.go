@@ -26,10 +26,7 @@ func Dump(w http.ResponseWriter, code int, resp interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 
-	b, err := json.Marshal(resp)
-	if err != nil {
+	if err := json.NewEncoder(w).Encode(resp); err != nil {
 		log.Println(err.Error())
 	}
-
-	w.Write(b)
 }

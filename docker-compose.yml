@@ -22,8 +22,6 @@ services:
     tty: true
     volumes:
       - .:/var/app:delegated
-    # depends_on:
-        # - mysql
     security_opt:
         - seccomp:unconfined
     cap_add:

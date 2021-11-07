@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/olegbespalov/go-api-example/pkg/config"
 )
@@ -12,10 +13,14 @@ func main() {
 
 	log.Printf("running an API on http://localhost:%s/\n", port)
 
-	http.HandleFunc("/", handler)
+	srv := http.Server{
+		Addr:         ":" + port,
+		Handler:      &simple{},
+		ReadTimeout:  2500 * time.Millisecond,
+		WriteTimeout: 5 * time.Second,
+	}
 
-	err := http.ListenAndServe(":"+port, nil)
-	if err != nil {
+	if err := srv.ListenAndServe(); err != nil {
 		log.Panicln(err.Error())
 	}
 }

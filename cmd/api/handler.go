@@ -7,7 +7,9 @@ import (
 	"github.com/olegbespalov/go-api-example/pkg/response"
 )
 
-func handler(w http.ResponseWriter, r *http.Request) {
+type simple struct{}
+
+func (s simple) ServeHTTP(w http.ResponseWriter, _ *http.Request) {
 	log.Println("incoming request")
 
 	response.Message(w, http.StatusOK, "Hey Here")
