@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/olegbespalov/go-api-example/pkg/config"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func main() {
@@ -15,6 +16,11 @@ func main() {
 	}
 
 	log.Printf("running an %s on http://localhost:%s/\n", config.AppName, port)
+
+	go func() {
+		http.Handle("/metrics", promhttp.Handler())
+		log.Fatal(http.ListenAndServe(config.MetricsAddr, nil))
+	}()
 
 	srv := http.Server{
 		Addr:         ":" + port,

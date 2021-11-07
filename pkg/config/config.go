@@ -8,6 +8,8 @@ var (
 
 	// AppName is an application name
 	AppName string
+
+	MetricsAddr string = ":8084"
 )
 
 func init() {
