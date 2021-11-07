@@ -10,8 +10,11 @@ import (
 
 func main() {
 	port := config.AppPort
+	if port == "" {
+		log.Fatalln("port should be defined")
+	}
 
-	log.Printf("running an API on http://localhost:%s/\n", port)
+	log.Printf("running an %s on http://localhost:%s/\n", config.AppName, port)
 
 	srv := http.Server{
 		Addr:         ":" + port,
