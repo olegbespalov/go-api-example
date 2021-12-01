@@ -24,11 +24,15 @@ FROM builder as dev
 
 RUN curl -sSfL https://raw.githubusercontent.com/cosmtrek/air/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
 
+CMD $(go env GOPATH)/bin/air -c configs/.air.toml
+
+FROM builder as debug
+
 RUN go get -u github.com/go-delve/delve/cmd/dlv
 
-CMD $(go env GOPATH)/bin/air -c configs/.air.${APP_NAME}.toml
+# TODO RUN DEBUGGER
 
-FROM alpine:latest
+FROM alpine:latest as prod
 
 RUN apk --no-cache add ca-certificates
 
