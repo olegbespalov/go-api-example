@@ -23,14 +23,11 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: 1.17.x
-      - name: Determine golangci-lint version
-        run: |
-          GOLANG_CI_VERSION=$(head -n 1 .golangci.yml | sed 's/# //g')
       - name: Install golangci-lint
         working-directory: /tmp
         run: |
-          echo "version: ${GOLANG_CI_VERSION}"
-          go install "github.com/golangci/golangci-lint/cmd/golangci-lint@${GOLANG_CI_VERSION}"
+          GOLANG_CI_VERSION=$(head -n 1 "${GITHUB_WORKSPACE}/.golangci.yml" | sed 's/# //g')
+          go install "github.com/golangci/golangci-lint/cmd/golangci-lint@$GOLANG_CI_VERSION"
       - name: Run linters
         run: |
           golangci-lint run
