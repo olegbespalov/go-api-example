@@ -12,9 +12,22 @@ jobs:
   golangci:
     name: lint
     runs-on: ubuntu-latest
+    env:
+        GO111MODULE: 'on'
     steps:
-      - uses: actions/checkout@v2
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
         with:
-          version: v1.43
+          fetch-depth: 0
+      - name: Install Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17.x
+      - name: Install golangci-lint
+        working-directory: /tmp
+        run: |
+          GOLANG_CI_VERSION=$(head -n 1 .golangci.yml | sed 's/# //g')
+          go install "github.com/golangci/golangci-lint/cmd/golangci-lint@$GOLANG_CI_VERSION"
+      - name: Run linters
+        run: |
+          golangci-lint run

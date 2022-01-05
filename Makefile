@@ -1,6 +1,7 @@
 GOCMD = $(shell which go)
 GOFMT = $(shell which gofmt)
 GOFILES = $(shell find . -type f -name '*.go' -not -path "./vendor/*")
+GOLANGCI_VERSION = $(shell head -n 1 .golangci.yml | sed 's/# //g')
 
 .PHONY: help
 help: ## - Show help message
@@ -22,3 +23,7 @@ code_format: ## - Format code
 .PHONY: code_lint
 code_lint: ## - Run a linter
 	golangci-lint run	
+
+.PHONY: ci-lint
+ci-lint :
+	docker run --rm -v $(shell pwd):/app -w /app golangci/golangci-lint:$(GOLANGCI_VERSION) make code_lint
