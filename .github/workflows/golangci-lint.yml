@@ -29,7 +29,8 @@ jobs:
       - name: Install golangci-lint
         working-directory: /tmp
         run: |
-          go install "github.com/golangci/golangci-lint/cmd/golangci-lint@$GOLANG_CI_VERSION"
+          echo "version: ${GOLANG_CI_VERSION}"
+          go install "github.com/golangci/golangci-lint/cmd/golangci-lint@${GOLANG_CI_VERSION}"
       - name: Run linters
         run: |
           golangci-lint run
