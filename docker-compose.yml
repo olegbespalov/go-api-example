@@ -1,8 +1,12 @@
-version: '3'
+version: '3.7'
 
 networks:
     app-network:
       driver: bridge
+
+volumes:
+  prometheus-data:
+  grafana-data:
 
 services:
   api:
@@ -12,11 +16,13 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile
+      target: dev
       args:
         APP_NAME: api
         APP_PORT: 8083
     ports: 
       - 8083:8083
+      - 8084:8084
     tty: true
     volumes:
       - .:/var/app:delegated
@@ -26,3 +32,24 @@ services:
         - SYS_PTRACE
     networks:
         - app-network
+  prometheus:
+    image: prom/prometheus:v2.21.0
+    ports:
+      - 9000:9090
+    volumes:
+      - ./configs/prometheus:/etc/prometheus
+      - prometheus-data:/prometheus
+    command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yml
+    networks:
+      - app-network
+  grafana:
+    image: grafana/grafana:7.5.7
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    volumes:
+      - ./configs/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - grafana-data:/var/lib/grafana
+    networks:
+      - app-network
+  
